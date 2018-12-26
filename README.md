@@ -5,9 +5,15 @@ WebApp that takes in image link and marks down the face if it is detected. User 
 Developed for fun on my free time. 
 ### Application was developed on React, used the following Technologies:
 
+#### Front End
 * React
 * Javascript
+* CSS/HTML
+
+#### Back End
 * Node.js
 * Express.js
 * Bcrypt
+
+#### Database
 * PostgreSQL
