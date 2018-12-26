@@ -14,6 +14,7 @@ Developed for fun on my free time.
 * Node.js
 * Express.js
 * Bcrypt
+* Some APIs
 
 #### Database
 * PostgreSQL
