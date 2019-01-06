@@ -1,15 +1,28 @@
-import React from 'react';
-import './FaceRecognition.css';
+import React, { Component } from "react";
+import FaceBox from '../FaceBox/FaceBox.js';
+import "./FaceRecognition.css";
 
-const ImageLinkForm = ({imageUrl, box}) => {
-    return (
-        <div className='center ma'>
-            <div className='absolute mt2'>
-                <img id='inputimage' alt='photowithface' src={imageUrl} width='500px' height='auto'/>
-                <div className='bounding-box' style={{top: box.topRow, right: box.rightCol, bottom: box.bottomRow, left: box.leftCol}}></div>
+class ImageLinkForm extends Component {
+
+    render() {
+        const {imageUrl, boxArray} = this.props;
+        return (
+            <div className="center ma">
+                <div className="absolute mt2">
+                    <img id="inputimage" alt="photowithface" src={imageUrl} width="500px" height="auto" />
+                    {
+                        boxArray.length > 0?
+                        boxArray.map((box, i) => {
+                                return(
+                                    <FaceBox key={i} box={box} />
+                                    )
+                            })
+                        :<div/>
+                    }
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default ImageLinkForm;
