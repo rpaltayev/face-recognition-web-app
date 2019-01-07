@@ -8,7 +8,7 @@ Developed for fun on my free time.
 #### Front End
 * React
 * Javascript
-* CSS/HTML
+* HTML/CSS
 
 #### Back End
 * Node.js
