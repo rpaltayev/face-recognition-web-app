@@ -215,6 +215,7 @@ const IdentifyView = ({ persons, groupId, onPersonAdd }) => {
       return (
         <ListItem
           button
+          key={person.personId}
           selected={selectedIndex === idx}
           onClick={(event) => handleListItemClick(event, idx)}
         >
