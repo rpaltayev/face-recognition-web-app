@@ -1,4 +1,5 @@
 import React from "react";
+import { DEFAULT_PATH } from "../../constants";
 
 class Register extends React.Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class Register extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    fetch("https://damp-caverns-56656.herokuapp.com/register", {
+    fetch(`${DEFAULT_PATH}/register`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

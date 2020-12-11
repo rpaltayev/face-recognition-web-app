@@ -6,9 +6,11 @@ import Register from "./components/Register/Register";
 import Logo from "./components/Logo/Logo";
 import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import Rank from "./components/Rank/Rank";
+import IdentifyView from "./components/IdentifyView/IdentifyView";
+import Home from "./components/Home/Home";
 import "./App.css";
 import "tachyons";
+import { DEFAULT_PATH, NAV } from "./constants";
 
 const particleOptions = {
   particles: {
@@ -33,7 +35,8 @@ const initialState = {
     name: "",
     email: "",
     entries: 0,
-    joined: ""
+    joined: "",
+    persons: [],
   }
 };
 
@@ -72,7 +75,9 @@ class App extends Component {
         name: data.name,
         email: data.email,
         entries: data.entries,
-        joined: data.joined
+        joined: data.joined,
+        groupId: data.groupid,
+        persons: data.persons,
       }
     });
   };
@@ -83,10 +88,20 @@ class App extends Component {
     this.setState({ input: event.target.value });
   };
 
+  onPeronAdd = (person) => {
+    const user = this.state.user;
+    this.setState({
+      user: {
+        ...user,
+        persons: [...user.persons, person ]
+      }
+    })
+  }
+
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch("https://damp-caverns-56656.herokuapp.com/imageurl", {
+    fetch(`${DEFAULT_PATH}/imageurl`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -96,7 +111,7 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch("https://damp-caverns-56656.herokuapp.com/image", {
+          fetch(`${DEFAULT_PATH}/image`, {
             method: "put",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -113,32 +128,44 @@ class App extends Component {
       })
       .catch(err => console.log(err));
   };
+
   onRouteChange = route => {
-    if (route === "signout") {
+    if (route === NAV.SIGN_OUT) {
       this.setState(initialState);
-    } else if (route === "home") {
+    } else if (route === NAV.HOME) {
       this.setState({ isSignedIn: true });
     }
     this.setState({ route: route });
   };
+
+  getConent = () => {
+    const { imageUrl, route, boxArray, user } = this.state;
+    if (route === NAV.HOME) {
+      return (<Home onRouteChange={this.onRouteChange} />);
+    } else if (route === NAV.IDENTIFY) {
+      return (<IdentifyView persons={user.persons} groupId={user.groupId} onPersonAdd={this.onPeronAdd} />);
+    } else if (route === NAV.DETECT) {
+      return (
+        <div>
+          <Logo />
+          <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
+          <FaceRecognition imageUrl={imageUrl} boxArray={boxArray} />
+        </div>
+      );
+    } else if (route === NAV.SIGN_IN) {
+      return (<Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />);
+    } else {
+      return (<Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />);
+    }
+  }
+
   render() {
-    const { isSignedIn, imageUrl, route, boxArray } = this.state;
+    const { isSignedIn } = this.state;
     return (
       <div className="App">
         <Particles className="particles" params={particleOptions} />
         <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} />
-        {route === "home" ? (
-          <div>
-            <Logo />
-            <Rank name={this.state.user.name} entries={this.state.user.entries} />
-            <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit} />
-            <FaceRecognition imageUrl={imageUrl} boxArray={boxArray} />
-          </div>
-        ) : route === "signin" ? (
-          <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-        ) : (
-          <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-        )}
+        { this.getConent() }
       </div>
     );
   }
