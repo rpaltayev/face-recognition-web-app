@@ -1,4 +1,4 @@
-## [Application Link](https://super-face-recognition.herokuapp.com/)
+## [Application Link](https://ai-face-identification-web.herokuapp.com/)
 
 
 WebApp that takes in image link and marks down the face if it is detected. User can register/signin and track number of entries.
